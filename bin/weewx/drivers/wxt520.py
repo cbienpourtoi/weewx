@@ -20,12 +20,12 @@ DRIVER_VERSION = '0.1'
 
 
 def loader(config_dict, _):
-    return WS1Driver(**config_dict[DRIVER_NAME])
+    return WXT520Driver(**config_dict[DRIVER_NAME])
 
 def confeditor_loader():
-    return WS1ConfEditor()
+    return WXT520ConfEditor()
 
-DEFAULT_PORT = '/dev/ttyS0'
+DEFAULT_PORT = '/dev/ttyUSB0'
 DEBUG_READ = 0
 
 
@@ -117,7 +117,7 @@ class WXT520Driver(weewx.drivers.AbstractDevice):
 class Station(object):
     def __init__(self, port):
         self.port = port
-        self.baudrate = 2400
+        self.baudrate = 19200
         self.timeout = 3
         self.serial_port = None
 
@@ -139,66 +139,25 @@ class Station(object):
             self.serial_port.close()
             self.serial_port = None
 
-    def read(self, nchar=1):
-        buf = self.serial_port.read(nchar)
-        n = len(buf)
-        if n != nchar:
-            if DEBUG_READ and n:
-                logdbg("partial buffer: '%s'" % _format(buf))
-            raise weewx.WeeWxIOError("Read expected %d chars, got %d" %
-                                     (nchar, n))
-        return buf
-
     def get_readings(self):
-        b = []
-        bad_byte = False
-        while True:
-            c = self.read(1)
-            if c == "\r":
-                break
-            elif c == '!' and len(b) > 0:
-                break
-            elif c == '!':
-                b = []
-            else:
-                try:
-                    int(c, 16)
-                except ValueError:
-                    bad_byte = True
-                b.append(c)
-        if DEBUG_READ:
-            logdbg("bytes: '%s'" % _format(b))
-        if len(b) != 48:
-            raise weewx.WeeWxIOError("Got %d bytes, expected 48" % len(b))
-        if bad_byte:
-            raise weewx.WeeWxIOError("One or more bad bytes: %s" % _format(b))
-        return ''.join(b)
+		s = ser.readline().replace('\r\n', '')
+		if re.match('^\dR\d', s):
+			d = dict()
+			ss = s.split(',')
+		d['station_id'], d['pkt_type'] = ss[0].split('R')
+			d.update(dict((k, v) for k,v in [x.split('=') for x in ss[1:]]))
+		return d
+
 
     @staticmethod
     def parse_readings(b):
-        """WS1 station emits data in PeetBros format:
-
-        http://www.peetbros.com/shop/custom.aspx?recid=29
-
-        Each line has 51 characters - 2 header bytes, 48 data bytes, and a
-        carriage return:
-
-        !!000000BE02EB000027700000023A023A0025005800000000\r
-          SSSSXXDDTTTTLLLLPPPPttttHHHHhhhhddddmmmmRRRRWWWW
-
-          SSSS - wind speed (0.1 kph)
-          XX   - wind direction calibration
-          DD   - wind direction (0-255)
-          TTTT - outdoor temperature (0.1 F)
-          LLLL - long term rain (0.01 in)
-          PPPP - pressure (0.1 mbar)
-          tttt - indoor temperature (0.1 F)
-          HHHH - outdoor humidity (0.1 %)
-          hhhh - indoor humidity (0.1 %)
-          dddd - date (day of year)
-          mmmm - time (minute of day)
-          RRRR - daily rain (0.01 in)
-          WWWW - one minute wind average (0.1 kph)
+        """ WXT520 packet types:
+		Acknowledge Active Command (a) - manual pg 71
+		aR0 - Composite Data Message Query
+		aR1 - Wind Data Message
+		aR2 - Pressure, Temperature and Humidity
+		aR3 - Precipitation Data Message
+		aR5 - Supervisor Data Message
         """
         data = dict()
         data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
@@ -216,18 +175,18 @@ class Station(object):
         return data
 
 
-class WS1ConfEditor(weewx.drivers.AbstractConfEditor):
+class WXT520ConfEditor(weewx.drivers.AbstractConfEditor):
     @property
     def default_stanza(self):
         return """
-[WS1]
-    # This section is for the ADS WS1 series of weather stations.
+[WXT520]
+    # This section is for the ADS WXT520 series of weather stations.
 
     # Serial port such as /dev/ttyS0, /dev/ttyUSB0, or /dev/cuaU0
     port = /dev/ttyUSB0
 
     # The driver to use:
-    driver = weewx.drivers.ws1
+    driver = weewx.drivers.wxt520
 """
 
     def prompt_for_settings(self):
@@ -240,14 +199,14 @@ class WS1ConfEditor(weewx.drivers.AbstractConfEditor):
 # define a main entry point for basic testing of the station without weewx
 # engine and service overhead.  invoke this as follows from the weewx root dir:
 #
-# PYTHONPATH=bin python bin/weewx/drivers/ws1.py
+# PYTHONPATH=bin python bin/weewx/drivers/wxt520.py
 
 if __name__ == '__main__':
     import optparse
 
     usage = """%prog [options] [--help]"""
 
-    syslog.openlog('ws1', syslog.LOG_PID | syslog.LOG_CONS)
+    syslog.openlog('WXT520', syslog.LOG_PID | syslog.LOG_CONS)
     syslog.setlogmask(syslog.LOG_UPTO(syslog.LOG_DEBUG))
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('--version', dest='version', action='store_true',
@@ -258,7 +217,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.version:
-        print "ADS WS1 driver version %s" % DRIVER_VERSION
+        print "WXT520 driver version %s" % DRIVER_VERSION
         exit(0)
 
     with Station(options.port) as s:
