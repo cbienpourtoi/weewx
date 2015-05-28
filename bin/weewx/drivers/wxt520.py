@@ -152,7 +152,9 @@ class Station(object):
 
     def get_readings(self):
         s = self.serial_port.readline().replace('\r\n', '')
+        print "s="+s
         if re.match('^\dR\d', s):
+            print "ca matche"
             d = dict()
             ss = s.split(',')
             #print "d:"
