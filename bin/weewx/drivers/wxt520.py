@@ -229,7 +229,7 @@ Sx                 =     Wind speed maximum (M = m/s)
             print "reading Supervisor Data Message"
 
             # All these values are defined in units.py
-            data['heatingTemp'] = remove_unit(b["th"])  # in C
+            data['heatingTemp'] = remove_unit(b["Th"])  # in C
             data['heatingVoltage'] = remove_unit(b["Vh"])  # in s
             data['supplyVoltage'] = remove_unit(b["Vs"])  # in V
             data['referenceVoltage'] = remove_unit(b["Vr"])  # in V (3.5 ref)
