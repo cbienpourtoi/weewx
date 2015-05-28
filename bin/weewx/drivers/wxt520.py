@@ -187,21 +187,23 @@ Sx                 =     Wind speed maximum (M = m/s)
         print "data est vide pour le moment c est normal"
         print data
 
-        print b["Dn"]
-        print b["Sx"]
+        if b["pkt_type"] = '1': # Wind data message
 
-        data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
-        data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
-        data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F
-        data['long_term_rain'] = int(b[12:16], 16) * 0.01  # inch
-        data['pressure'] = int(b[16:20], 16) * 0.1 * INHG_PER_MBAR  # inHg
-        data['inTemp'] = int(b[20:24], 16) * 0.1  # degree_F
-        data['outHumidity'] = int(b[24:28], 16) * 0.1  # percent
-        data['inHumidity'] = int(b[28:32], 16) * 0.1  # percent
-        data['day_of_year'] = int(b[32:36], 16)
-        data['minute_of_day'] = int(b[36:40], 16)
-        data['daily_rain'] = int(b[40:44], 16) * 0.01  # inch
-        data['wind_average'] = int(b[44:48], 16) * 0.1 * MILE_PER_KM  # mph
+            print b["Dn"]
+            print b["Sx"]
+
+            data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
+            data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
+            data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F
+            data['long_term_rain'] = int(b[12:16], 16) * 0.01  # inch
+            data['pressure'] = int(b[16:20], 16) * 0.1 * INHG_PER_MBAR  # inHg
+            data['inTemp'] = int(b[20:24], 16) * 0.1  # degree_F
+            data['outHumidity'] = int(b[24:28], 16) * 0.1  # percent
+            data['inHumidity'] = int(b[28:32], 16) * 0.1  # percent
+            data['day_of_year'] = int(b[32:36], 16)
+            data['minute_of_day'] = int(b[36:40], 16)
+            data['daily_rain'] = int(b[40:44], 16) * 0.01  # inch
+            data['wind_average'] = int(b[44:48], 16) * 0.1 * MILE_PER_KM  # mph
         return data
 
 
