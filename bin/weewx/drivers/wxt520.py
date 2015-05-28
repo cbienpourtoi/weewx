@@ -24,8 +24,10 @@ def loader(config_dict, _):
     print config_dict
     return WXT520Driver(**config_dict[DRIVER_NAME])
 
+
 def confeditor_loader():
     return WXT520ConfEditor()
+
 
 DEFAULT_PORT = '/dev/ttyUSB0'
 DEBUG_READ = 0
@@ -34,17 +36,22 @@ DEBUG_READ = 0
 def logmsg(level, msg):
     syslog.syslog(level, 'WXT520: %s' % msg)
 
+
 def logdbg(msg):
     logmsg(syslog.LOG_DEBUG, msg)
+
 
 def loginf(msg):
     logmsg(syslog.LOG_INFO, msg)
 
+
 def logerr(msg):
     logmsg(syslog.LOG_ERR, msg)
 
+
 def _format(buf):
     return ' '.join(["%0.2X" % ord(c) for c in buf])
+
 
 class WXT520Driver(weewx.drivers.AbstractDevice):
     """weewx driver that communicates with a VXT520 station
@@ -61,6 +68,7 @@ class WXT520Driver(weewx.drivers.AbstractDevice):
     retry_wait - how long to wait, in seconds, before retrying after a failure
     [Optional. Default is 10]
     """
+
     def __init__(self, **stn_dict):
         self.port = stn_dict.get('port', DEFAULT_PORT)
         self.polling_interval = float(stn_dict.get('polling_interval', 1))
@@ -142,14 +150,13 @@ class Station(object):
             self.serial_port = None
 
     def get_readings(self):
-		s = ser.readline().replace('\r\n', '')
-		if re.match('^\dR\d', s):
-			d = dict()
-			ss = s.split(',')
-		d['station_id'], d['pkt_type'] = ss[0].split('R')
-		d.update(dict((k, v) for k,v in [x.split('=') for x in ss[1:]]))
-		return d
-
+        s = self.serial_port.readline().replace('\r\n', '')
+        if re.match('^\dR\d', s):
+            d = dict()
+            ss = s.split(',')
+        d['station_id'], d['pkt_type'] = ss[0].split('R')
+        d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
+        return d
 
     @staticmethod
     def parse_readings(b):
@@ -196,7 +203,6 @@ class WXT520ConfEditor(weewx.drivers.AbstractConfEditor):
         print "example /dev/ttyUSB0 or /dev/ttyS0."
         port = self._prompt('port', '/dev/ttyUSB0')
         return {'port': port}
-
 
 # define a main entry point for basic testing of the station without weewx
 # engine and service overhead.  invoke this as follows from the weewx root dir:
