@@ -107,7 +107,6 @@ class StdEngine(object):
             loader_function = getattr(driver_module, 'loader')
             print loader_function
             # Call it with the configuration dictionary as the only argument:
-            print config_dict
             self.console = loader_function(config_dict, self)
             print "it now goes there"
         except Exception, ex:

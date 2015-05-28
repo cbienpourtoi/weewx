@@ -187,6 +187,8 @@ Sx                 =     Wind speed maximum (M = m/s)
         print "data est vide pour le moment c est normal"
         print data
 
+        data['long_term_rain'] = 0. # TODO: kill this!
+
         if b["pkt_type"] == '1': # Wind data message
 
             print "reading wind"
@@ -199,7 +201,6 @@ Sx                 =     Wind speed maximum (M = m/s)
             data['windDir'] = remove_unit(b["Dm"]) # in deg
             data['windDirMin'] = remove_unit(b["Dn"]) # in deg
 
-            data['long_term_rain'] = 0.
 
 
             print data
