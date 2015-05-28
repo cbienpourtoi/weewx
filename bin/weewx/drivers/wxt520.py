@@ -157,7 +157,7 @@ class Station(object):
             ss = s.split(',')
         print "d:"
         print d
-        print "ss:"
+        print "ss: this is the line divided in words"
         print ss
         d['station_id'], d['pkt_type'] = ss[0].split('R')
         d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
@@ -174,6 +174,7 @@ class Station(object):
 		aR5 - Supervisor Data Message
         """
         data = dict()
+        print data
         data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
         data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
         data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F
