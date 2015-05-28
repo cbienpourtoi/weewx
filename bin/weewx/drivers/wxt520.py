@@ -199,6 +199,9 @@ Sx                 =     Wind speed maximum (M = m/s)
             data['windDir'] = remove_unit(b["Dm"]) # in deg
             data['windDirMin'] = remove_unit(b["Dn"]) # in deg
 
+            data['long_term_rain'] = 0.
+
+
             print data
 
             """
