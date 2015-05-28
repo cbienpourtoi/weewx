@@ -90,6 +90,9 @@ class StdEngine(object):
         
         syslog.syslog(syslog.LOG_INFO, "engine: Loading station type %s (%s)" % (stationType, driver))
 
+        print "loic"
+        print driver
+
         # Import the driver:
         __import__(driver)
     
