@@ -192,9 +192,14 @@ Sx                 =     Wind speed maximum (M = m/s)
             print b["Dn"]
             print b["Sx"]
 
-            data['windSpeedMax'] = float(b["Sx"][:-1]) # in m/s
+            data['windSpeedMax'] = remove_unit(b["Sx"]) # in m/s
             data['windSpeed'] = float(b["Sm"][:-1]) # in m/s
             data['windSpeedMin'] = float(b["Sn"][:-1]) # in m/s
+
+            data['windDirMax'] =
+            data['windDir'] =
+            data['windDirMin'] =
+
             print data
 
             """
@@ -233,6 +238,10 @@ class WXT520ConfEditor(weewx.drivers.AbstractConfEditor):
         print "example /dev/ttyUSB0 or /dev/ttyS0."
         port = self._prompt('port', '/dev/ttyUSB0')
         return {'port': port}
+
+def remove_unit(string):
+    return float(string[:-1])
+
 
 # define a main entry point for basic testing of the station without weewx
 # engine and service overhead.  invoke this as follows from the weewx root dir:
