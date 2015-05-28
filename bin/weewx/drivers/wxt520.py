@@ -193,6 +193,7 @@ Sx                 =     Wind speed maximum (M = m/s)
             print b["Sx"]
 
             data['windSpeedMax'] = b["Sx"]
+            print data
 
             """
             data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
