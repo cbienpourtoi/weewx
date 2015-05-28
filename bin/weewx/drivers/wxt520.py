@@ -187,7 +187,7 @@ Sx                 =     Wind speed maximum (M = m/s)
         print "data est vide pour le moment c est normal"
         print data
 
-        if b["pkt_type"] = '1': # Wind data message
+        if b["pkt_type"] == '1': # Wind data message
 
             print b["Dn"]
             print b["Sx"]
