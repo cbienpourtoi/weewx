@@ -154,15 +154,15 @@ class Station(object):
         s = ''
         while s == '':
             s = self.serial_port.readline().replace('\r\n', '')
-            print "s="+s
+            print "s=" + s
             if re.match('^\dR\d', s):
                 print "ca matche"
                 d = dict()
                 ss = s.split(',')
-                #print "d:"
+                # print "d:"
                 ##print d
-                #print "ss: this is the line divided in words"
-                #print ss
+                # print "ss: this is the line divided in words"
+                # print ss
                 d['station_id'], d['pkt_type'] = ss[0].split('R')
                 d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
         return d
@@ -170,12 +170,13 @@ class Station(object):
     @staticmethod
     def parse_readings(b):
         """ WXT520 packet types:
-		Acknowledge Active Command (a) - manual pg 71
-		aR0 - Composite Data Message Query
-		aR1 - Wind Data Message
-		aR2 - Pressure, Temperature and Humidity
-		aR3 - Precipitation Data Message
-		aR5 - Supervisor Data Message
+Acknowledge Active Command (a) - manual pg 71
+aR0 - Composite Data Message Query
+aR1 - Wind Data Message
+aR2 - Pressure, Temperature and Humidity
+aR3 - Precipitation Data Message
+aR5 - Supervisor Data Message
+
 R1                =     Wind message query command
 Dn                =     Wind direction minimum (D = degrees)
 Dm               =     Wind direction average (D = degrees)
@@ -184,27 +185,44 @@ Sn                 =     Wind speed minimum (M = m/s)
 Sm               =     Wind speed average (M = m/s)
 Sx                 =     Wind speed maximum (M = m/s)
 
-        """
-        print "b :"
+
+
+"""
         print b
         data = dict()
-        print "data est vide pour le moment c est normal"
-        print data
 
-        data['long_term_rain'] = 0. # TODO: kill this!
+        data['long_term_rain'] = 0.  # TODO: kill this!
 
-        if b["pkt_type"] == '1': # Wind data message
+        if b["pkt_type"] == '1':  # Wind data message
+            print "reading Wind Data Message"
 
-            print "reading wind"
+            data['windSpeedMax'] = remove_unit(b["Sx"])  # in m/s
+            data['windSpeed'] = remove_unit(b["Sm"])  # in m/s
+            data['windSpeedMin'] = remove_unit(b["Sn"])  # in m/s
 
-            data['windSpeedMax'] = remove_unit(b["Sx"]) # in m/s
-            data['windSpeed'] = remove_unit(b["Sm"]) # in m/s
-            data['windSpeedMin'] = remove_unit(b["Sn"]) # in m/s
+            data['windDirMax'] = remove_unit(b["Dx"])  # in deg
+            data['windDir'] = remove_unit(b["Dm"])  # in deg
+            data['windDirMin'] = remove_unit(b["Dn"])  # in deg
 
-            data['windDirMax'] = remove_unit(b["Dx"]) # in deg
-            data['windDir'] = remove_unit(b["Dm"]) # in deg
-            data['windDirMin'] = remove_unit(b["Dn"]) # in deg
+        elif b["pkt_type"] == '2':  # Wind data message
+            print "reading Pressure, Temperature and Humidity"
 
+            data['pressure'] = remove_unit(b["Pa"])  # in hPa
+            data['outHumidity'] = remove_unit(b["Ua"])  # in %RH
+            data['outTemp'] = remove_unit(b["Ta"])  # in deg C
+
+        elif b["pkt_type"] == '3':  # Wind data message
+            print "reading Precipitation Data Message"
+
+            data['rainAccumulation'] = remove_unit(b["Rc"])  # in mm
+            data['rainDuration'] = remove_unit(b["Rd"])  # in s
+            data['rainIntensity'] = remove_unit(b["Ri"])  # in mm/h
+            data['rainPeakIntensity'] = remove_unit(b["Rp"])  # in mm/h
+
+            data['hailAccumulation'] = remove_unit(b["Hc"])  # in hits/cm2
+            data['hailDuration'] = remove_unit(b["Hd"])  # in s
+            data['hailIntensity'] = remove_unit(b["Hi"])  # in hits/cm2h
+            data['hailPeakIntensity'] = remove_unit(b["Hp"])  # in hits/cm2h
 
 
             print data
@@ -249,9 +267,9 @@ class WXT520ConfEditor(weewx.drivers.AbstractConfEditor):
         port = self._prompt('port', '/dev/ttyUSB0')
         return {'port': port}
 
+
 def remove_unit(string):
     return float(string[:-1])
-
 
 # define a main entry point for basic testing of the station without weewx
 # engine and service overhead.  invoke this as follows from the weewx root dir:
