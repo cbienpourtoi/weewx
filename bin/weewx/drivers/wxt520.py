@@ -189,16 +189,15 @@ Sx                 =     Wind speed maximum (M = m/s)
 
         if b["pkt_type"] == '1': # Wind data message
 
-            print b["Dn"]
-            print b["Sx"]
+            print "reading wind"
 
             data['windSpeedMax'] = remove_unit(b["Sx"]) # in m/s
-            data['windSpeed'] = float(b["Sm"][:-1]) # in m/s
-            data['windSpeedMin'] = float(b["Sn"][:-1]) # in m/s
+            data['windSpeed'] = remove_unit(b["Sm"]) # in m/s
+            data['windSpeedMin'] = remove_unit(b["Sn"]) # in m/s
 
-            #data['windDirMax'] =
-            #data['windDir'] =
-            #data['windDirMin'] =
+            data['windDirMax'] = remove_unit(b["Dx"]) # in deg
+            data['windDir'] = remove_unit(b["Dm"]) # in deg
+            data['windDirMin'] = remove_unit(b["Dn"]) # in deg
 
             print data
 
@@ -216,6 +215,9 @@ Sx                 =     Wind speed maximum (M = m/s)
             data['daily_rain'] = int(b[40:44], 16) * 0.01  # inch
             data['wind_average'] = int(b[44:48], 16) * 0.1 * MILE_PER_KM  # mph
             """
+        else:
+            print "reading something else"
+
         return data
 
 
