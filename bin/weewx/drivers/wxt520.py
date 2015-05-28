@@ -152,10 +152,9 @@ class Station(object):
 
     def get_readings(self):
         s = self.serial_port.readline().replace('\r\n', '')
-        while s != '':
-            if re.match('^\dR\d', s):
-                d = dict()
-                ss = s.split(',')
+        if re.match('^\dR\d', s):
+            d = dict()
+            ss = s.split(',')
             #print "d:"
             ##print d
             #print "ss: this is the line divided in words"
