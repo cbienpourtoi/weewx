@@ -12,6 +12,7 @@ from __future__ import with_statement
 import serial
 import syslog
 import time
+import re
 
 import weewx.drivers
 
