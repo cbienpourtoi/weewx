@@ -192,7 +192,9 @@ Sx                 =     Wind speed maximum (M = m/s)
             print b["Dn"]
             print b["Sx"]
 
-            data['windSpeedMax'] = b["Sx"]
+            data['windSpeedMax'] = float(b["Sx"][:-1]) # in m/s
+            data['windSpeed'] = float(b["Sm"][:-1]) # in m/s
+            data['windSpeedMin'] = float(b["Sn"][:-1]) # in m/s
             print data
 
             """
