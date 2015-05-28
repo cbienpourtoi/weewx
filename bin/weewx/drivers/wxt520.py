@@ -172,12 +172,24 @@ class Station(object):
 		aR2 - Pressure, Temperature and Humidity
 		aR3 - Precipitation Data Message
 		aR5 - Supervisor Data Message
+R1                =     Wind message query command
+Dn                =     Wind direction minimum (D = degrees)
+Dm               =     Wind direction average (D = degrees)
+Dx                =     Wind direction maximum (D = degrees)
+Sn                 =     Wind speed minimum (M = m/s)
+Sm               =     Wind speed average (M = m/s)
+Sx                 =     Wind speed maximum (M = m/s)
+
         """
         print "b :"
         print b
         data = dict()
-        print "data :"
+        print "data est vide pour le moment c est normal"
         print data
+
+        print b["Dn"]
+        print b["Sx"]
+
         data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
         data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
         data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F

@@ -16,7 +16,7 @@ while True:
         d = dict()
         ss = s.split(',')
     d['station_id'], d['pkt_type'] = ss[0].split('R')
-        d.update(dict((k, v) for k,v in [x.split('=') for x in ss[1:]]))
+    d.update(dict((k, v) for k,v in [x.split('=') for x in ss[1:]]))
     print d
     time.sleep(0.1)
 
