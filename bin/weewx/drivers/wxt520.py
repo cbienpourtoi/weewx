@@ -192,6 +192,9 @@ Sx                 =     Wind speed maximum (M = m/s)
             print b["Dn"]
             print b["Sx"]
 
+            data['windSpeedMax'] = b["Sx"]
+
+            """
             data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
             data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
             data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F
@@ -204,6 +207,7 @@ Sx                 =     Wind speed maximum (M = m/s)
             data['minute_of_day'] = int(b[36:40], 16)
             data['daily_rain'] = int(b[40:44], 16) * 0.01  # inch
             data['wind_average'] = int(b[44:48], 16) * 0.1 * MILE_PER_KM  # mph
+            """
         return data
 
 
