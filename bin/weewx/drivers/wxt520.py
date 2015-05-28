@@ -173,7 +173,10 @@ class Station(object):
 		aR3 - Precipitation Data Message
 		aR5 - Supervisor Data Message
         """
+        print "b :"
+        print b
         data = dict()
+        print "data :"
         print data
         data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
         data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
