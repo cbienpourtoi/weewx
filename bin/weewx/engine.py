@@ -108,7 +108,7 @@ class StdEngine(object):
             print loader_function
             # Call it with the configuration dictionary as the only argument:
             self.console = loader_function(config_dict, self)
-            print self.console
+            print "it does not go there"
         except Exception, ex:
             # Signal that we have an initialization error:
             raise InitializationError(ex)
