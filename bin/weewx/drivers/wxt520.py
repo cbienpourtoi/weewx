@@ -155,6 +155,10 @@ class Station(object):
         if re.match('^\dR\d', s):
             d = dict()
             ss = s.split(',')
+        print "d:"
+        print d
+        print "ss:"
+        print ss
         d['station_id'], d['pkt_type'] = ss[0].split('R')
         d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
         return d
