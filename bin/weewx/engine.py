@@ -102,6 +102,7 @@ class StdEngine(object):
             # This is a bit of Python wizardry. First, find the driver module
             # in sys.modules.
             driver_module = sys.modules[driver]
+            print driver_module
             # Find the function 'loader' within the module:
             loader_function = getattr(driver_module, 'loader')
             # Call it with the configuration dictionary as the only argument:
