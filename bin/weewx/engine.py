@@ -105,8 +105,10 @@ class StdEngine(object):
             print driver_module
             # Find the function 'loader' within the module:
             loader_function = getattr(driver_module, 'loader')
+            print loader_function
             # Call it with the configuration dictionary as the only argument:
             self.console = loader_function(config_dict, self)
+            print self.console
         except Exception, ex:
             # Signal that we have an initialization error:
             raise InitializationError(ex)
