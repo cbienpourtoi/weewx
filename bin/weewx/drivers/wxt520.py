@@ -207,6 +207,7 @@ Sx                 =     Wind speed maximum (M = m/s)
         elif b["pkt_type"] == '2':  # Wind data message
             print "reading Pressure, Temperature and Humidity"
 
+            # All these values are defined in units.py
             data['pressure'] = remove_unit(b["Pa"])  # in hPa
             data['outHumidity'] = remove_unit(b["Ua"])  # in %RH
             data['outTemp'] = remove_unit(b["Ta"])  # in deg C
@@ -224,23 +225,15 @@ Sx                 =     Wind speed maximum (M = m/s)
             data['hailIntensity'] = remove_unit(b["Hi"])  # in hits/cm2h
             data['hailPeakIntensity'] = remove_unit(b["Hp"])  # in hits/cm2h
 
+        elif b["pkt_type"] == '5':  # Wind data message
+            print "reading Supervisor Data Message"
 
-            print data
+            # All these values are defined in units.py
+            data['heatingTemp'] = remove_unit(b["th"])  # in C
+            data['heatingVoltage'] = remove_unit(b["Vh"])  # in s
+            data['supplyVoltage'] = remove_unit(b["Vs"])  # in V
+            data['referenceVoltage'] = remove_unit(b["Vr"])  # in V (3.5 ref)
 
-            """
-            data['windSpeed'] = int(b[0:4], 16) * 0.1 * MILE_PER_KM  # mph
-            data['windDir'] = int(b[6:8], 16) * 1.411764  # compass degrees
-            data['outTemp'] = int(b[8:12], 16) * 0.1  # degree_F
-            data['long_term_rain'] = int(b[12:16], 16) * 0.01  # inch
-            data['pressure'] = int(b[16:20], 16) * 0.1 * INHG_PER_MBAR  # inHg
-            data['inTemp'] = int(b[20:24], 16) * 0.1  # degree_F
-            data['outHumidity'] = int(b[24:28], 16) * 0.1  # percent
-            data['inHumidity'] = int(b[28:32], 16) * 0.1  # percent
-            data['day_of_year'] = int(b[32:36], 16)
-            data['minute_of_day'] = int(b[36:40], 16)
-            data['daily_rain'] = int(b[40:44], 16) * 0.01  # inch
-            data['wind_average'] = int(b[44:48], 16) * 0.1 * MILE_PER_KM  # mph
-            """
         else:
             print "reading something else"
 
