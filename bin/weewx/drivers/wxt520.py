@@ -152,16 +152,16 @@ class Station(object):
 
     def get_readings(self):
         s = self.serial_port.readline().replace('\r\n', '')
-        print s
-        if re.match('^\dR\d', s):
-            d = dict()
-            ss = s.split(',')
-        #print "d:"
-        ##print d
-        #print "ss: this is the line divided in words"
-        #print ss
-        d['station_id'], d['pkt_type'] = ss[0].split('R')
-        d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
+        while s != '':
+            if re.match('^\dR\d', s):
+                d = dict()
+                ss = s.split(',')
+            #print "d:"
+            ##print d
+            #print "ss: this is the line divided in words"
+            #print ss
+            d['station_id'], d['pkt_type'] = ss[0].split('R')
+            d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
         return d
 
     @staticmethod
