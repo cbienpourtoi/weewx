@@ -15,11 +15,13 @@ import time
 
 import weewx.drivers
 
-DRIVER_NAME = 'WXT520'
+DRIVER_NAME = 'wxt520'
 DRIVER_VERSION = '0.1'
 
 
 def loader(config_dict, _):
+    print "test in loader"
+    print config_dict
     return WXT520Driver(**config_dict[DRIVER_NAME])
 
 def confeditor_loader():
