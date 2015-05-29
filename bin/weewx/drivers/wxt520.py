@@ -152,11 +152,10 @@ class Station(object):
 
     def get_readings(self):
         s = ''
-        while s == '':
+        while s[1] == '':
             s = self.serial_port.readline().replace('\r\n', '')
             print "s=" + s
             if re.match('^\dR\d', s):
-                print "ca matche"
                 d = dict()
                 ss = s.split(',')
                 # print "d:"
@@ -165,6 +164,8 @@ class Station(object):
                 # print ss
                 d['station_id'], d['pkt_type'] = ss[0].split('R')
                 d.update(dict((k, v) for k, v in [x.split('=') for x in ss[1:]]))
+            else:
+                continue
         return d
 
     @staticmethod
@@ -176,17 +177,6 @@ aR1 - Wind Data Message
 aR2 - Pressure, Temperature and Humidity
 aR3 - Precipitation Data Message
 aR5 - Supervisor Data Message
-
-R1                =     Wind message query command
-Dn                =     Wind direction minimum (D = degrees)
-Dm               =     Wind direction average (D = degrees)
-Dx                =     Wind direction maximum (D = degrees)
-Sn                 =     Wind speed minimum (M = m/s)
-Sm               =     Wind speed average (M = m/s)
-Sx                 =     Wind speed maximum (M = m/s)
-
-
-
 """
         print b
         data = dict()
