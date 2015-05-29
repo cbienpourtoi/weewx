@@ -31,7 +31,7 @@ def confeditor_loader():
 
 
 DEFAULT_PORT = '/dev/ttyUSB0'
-DEBUG_READ = 0
+DEBUG_READ = 1
 
 
 def logmsg(level, msg):
@@ -227,6 +227,16 @@ aR5 - Supervisor Data Message
         else:
             print "reading something else"
 
+
+        # fake stuffs:
+        #data['pressure'] = int(b[16:20], 16) * 0.1 * INHG_PER_MBAR  # inHg
+        data['inTemp'] = 20.  # degree_F
+        data['inHumidity'] = 0.4  # percent
+        #data['day_of_year'] = int(b[32:36], 16)
+        #data['minute_of_day'] = int(b[36:40], 16)
+        data['daily_rain'] = 3.01  # inch
+        data['wind_average'] = 12.  # mph
+
         return data
 
 
@@ -235,7 +245,7 @@ class WXT520ConfEditor(weewx.drivers.AbstractConfEditor):
     def default_stanza(self):
         return """
 [WXT520]
-    # This section is for the ADS WXT520 series of weather stations.
+    # This section is for the WXT520 series of weather stations.
 
     # Serial port such as /dev/ttyS0, /dev/ttyUSB0, or /dev/cuaU0
     port = /dev/ttyUSB0
