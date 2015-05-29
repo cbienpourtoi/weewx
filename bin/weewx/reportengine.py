@@ -103,18 +103,23 @@ class StdReportEngine(threading.Thread):
 
             # Add the default database binding:
             skin_dict.setdefault('data_binding', 'wx_binding')
+            syslog.syslog(syslog.LOG_ERR, "done: skin_dict.setdefault('data_binding', 'wx_binding')")
 
             # Inject any overrides the user may have specified in the
             # weewx.conf configuration file for all reports:
             for scalar in self.config_dict['StdReport'].scalars:
                 skin_dict[scalar] = self.config_dict['StdReport'][scalar]
-            
+                syslog.syslog(syslog.LOG_ERR, "done: skin_dict[scalar] = self.config_dict['StdReport'][scalar]")
+
             # Now inject any overrides for this specific report:
             skin_dict.merge(self.config_dict['StdReport'][report])
-            
+            syslog.syslog(syslog.LOG_ERR, "done: skin_dict.merge(self.config_dict['StdReport'][report])")
+
+
             # Finally, add the report name:
             skin_dict['REPORT_NAME'] = report
-            
+            syslog.syslog(syslog.LOG_ERR, "done: skin_dict['REPORT_NAME'] = report")
+
             for generator in weeutil.weeutil.option_as_list(skin_dict['Generators'].get('generator_list')):
 
                 try:
@@ -124,6 +129,8 @@ class StdReportEngine(threading.Thread):
                                                                  self.gen_ts, 
                                                                  self.first_run,
                                                                  self.stn_info)
+                    syslog.syslog(syslog.LOG_ERR, "done: obj = weeutil.weeutil._get_object(ge")
+
                 except Exception, e:
                     syslog.syslog(syslog.LOG_CRIT, "reportengine: Unable to instantiate generator %s." % generator)
                     syslog.syslog(syslog.LOG_CRIT, "        ****  %s" % e)
@@ -135,7 +142,8 @@ class StdReportEngine(threading.Thread):
                 try:
                     # Call its start() method
                     obj.start()
-                    
+                    syslog.syslog(syslog.LOG_ERR, "done: obj.start()")
+
                 except Exception, e:
                     # Caught unrecoverable error. Log it, continue on to the next generator.
                     syslog.syslog(syslog.LOG_CRIT, "reportengine: Caught unrecoverable exception in generator %s" % (generator,))
@@ -147,6 +155,7 @@ class StdReportEngine(threading.Thread):
                     
                 finally:
                     obj.finalize()
+                    syslog.syslog(syslog.LOG_ERR, "done: obj.finalize()")
         
 #===============================================================================
 #                    Class ReportGenerator
